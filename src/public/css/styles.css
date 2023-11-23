@@ -1,0 +1,10 @@
+/* Import Tailwind CSS */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* custom styles */
+
+body {
+  font-family: 'Arial', sans-serif;
+}
