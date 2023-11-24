@@ -12,7 +12,7 @@ server.get('/', checkFreeUserLimits, async (req, res) => {
     try {
       const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
       const posts = response.data.slice(0, 20);
-      res.render('feed', { username: req.user.username, posts });
+      res.render('feed', { posts });
     } catch (error) {
       console.error('Error fetching posts:', error.message);
       res.status(500).send('Internal Server Error');
@@ -73,7 +73,7 @@ server.get('/following', authenticateConfirm, (req, res) => {
 
 // Paywall Page
 server.get('/paywall', authenticateConfirm, (req, res) => {
-    res.render('paywall', { username: req.user.username });
+    res.render('paywall');
 });
 
 server.post('/pay', (req, res) => {

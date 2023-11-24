@@ -5,7 +5,6 @@ import route from './routes';
 const server = express();
 
 server.use(express.json());
-server.use()
 server.use(express.urlencoded({extended: true}));
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/css', express.static(path.join(__dirname, 'public/css')));
