@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import server from './server';
 import checkFreeUserLimits from './middleware/regulator';
 import axios from 'axios';
 import { authenticateConfirm, secretKey } from './middleware/auth';
@@ -8,7 +7,7 @@ import { users } from './models/mockData';
 
 const route = Router();
 
-server.get('/', checkFreeUserLimits, async (req, res) => {
+route.get("/", checkFreeUserLimits, async (req, res) => {
     try {
       const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
       const posts = response.data.slice(0, 20);
@@ -20,11 +19,11 @@ server.get('/', checkFreeUserLimits, async (req, res) => {
 });
 
 // Login Page
-server.get('/login', (req, res) => {
+route.get('/login', (req, res) => {
     res.render('login');
 });
   
-server.post('/login', (req, res) => {
+route.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).send('Please enter all fields');
@@ -40,7 +39,7 @@ server.post('/login', (req, res) => {
 });
 
 // Profile Page
-server.get('/profile', authenticateConfirm, (req, res) => {
+route.get('/profile', authenticateConfirm, (req, res) => {
     const fetchUserProfile = async (username) => {
         const response = await axios.get(`https://jsonplaceholder.typicode.com/users?username=${username}`);
         return response.data;
@@ -49,7 +48,7 @@ server.get('/profile', authenticateConfirm, (req, res) => {
 });
   
 // My Posts Page
-server.get('/my-posts', authenticateConfirm, (req, res) => {
+route.get('/my-posts', authenticateConfirm, (req, res) => {
     const userId = req.user.id;
     axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`).then((response) => {
       const myPosts = response.data;
@@ -61,7 +60,7 @@ server.get('/my-posts', authenticateConfirm, (req, res) => {
 });
   
 // Following Page
-server.get('/following', authenticateConfirm, (req, res) => {
+route.get('/following', authenticateConfirm, (req, res) => {
     axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${[2, 3, 4].join('&userId=')}`).then((response) => {
       const followingPosts = response.data;
       res.render('following', { followingPosts });
@@ -72,24 +71,24 @@ server.get('/following', authenticateConfirm, (req, res) => {
 });
 
 // Paywall Page
-server.get('/paywall', authenticateConfirm, (req, res) => {
+route.get('/paywall', authenticateConfirm, (req, res) => {
     res.render('paywall');
 });
 
-server.post('/pay', (req, res) => {
+route.post('/pay', (req, res) => {
     const { username } = req.user;
 
     // Mock payment process
     users[username].isPremium = true;
 
-    // Update token
+    //Update token
     const token = jwt.sign({ username, isPremium: users[username].isPremium }, secretKey);
     res.cookie('token', token);
     res.redirect('/');
 });
 
 // Logout
-server.get('/logout', (req, res) => {
+route.get('/logout', (req, res) => {
     res.clearCookie('token');
     res.redirect('/login');
 });

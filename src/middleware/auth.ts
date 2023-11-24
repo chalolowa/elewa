@@ -6,6 +6,7 @@ const authenticateConfirm = (req, res, next) => {
     const token = req.cookies.token;
   
     if (!token) {
+      console.error('Token not found in request:', req.cookies);
       return res.redirect('/login');
     }
   
