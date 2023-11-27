@@ -1,11 +1,14 @@
 import express from 'express';
 import path from 'path';
 import route from './routes';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const server = express();
 
-server.use(express.json());
-server.use(express.urlencoded({extended: true}));
+server.use(cors);
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({extended: false}));
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/css', express.static(path.join(__dirname, 'public/css')));
 server.use('/assets', express.static(path.join(__dirname, 'public/assets')));
